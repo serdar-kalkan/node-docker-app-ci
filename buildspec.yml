@@ -1,0 +1,21 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 10
+    commands:
+      - npm i npm@latest -g
+      - pip install --upgrade pip
+      - pip install --upgrade awscli
+      - echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+  pre_build:
+    commands:
+      - npm install
+      - npm test
+  build:
+    commands:
+      - docker build -t testserdar/node-docker-app .
+  post_build:
+    commands:
+      - docker push testserdar/node-docker-app
